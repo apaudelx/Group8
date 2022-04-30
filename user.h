@@ -211,6 +211,8 @@ string User::getData(int choice) {
   else if (choice == 4) {
     return paymentInfo;
   }
+  else
+    return "NULL";
 }
 
 // Destructor Method
