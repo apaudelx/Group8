@@ -9,10 +9,15 @@ Purpose:
 #include <fstream>
 #include <istream>
 #include <stdlib.h>
+#include <sstream>
 #include <string>
+#include <iomanip>
 #include "user.h"
 void login();
 void create_account();
+void order_history();
+void add_to_cart();
+void view_inventory();
 
 using namespace std;
 
@@ -100,24 +105,24 @@ void login()
     {
       int choice;
       cout << "MENU\n";
-      cout << "1. Account Information" << endl;
-      cout << "    Username" << endl;
-      cout << "    Password" << endl;
-      cout << "    Shipping address" << endl;
-      cout << "    Payment information" << endl;
-      cout << "    Delete account" << endl;
-      cout << "    Go back" << endl;
-      cout << "2. Cart Information" << endl;
-      cout << "    Go back" << endl;
-      cout << "    View Cart" << endl;
-      cout << "    Remove Item from Cart" << endl;
-      cout << "    Add item to cart" << endl;
-      cout << "    Checkout" << endl;
-      cout << "3. Order History" << endl;
-      cout << "    Go back" << endl;
-      cout << "4. Inventory" << endl;
-      cout << "    Categories" << endl;
-      cout << "    Go back" << endl;
+      cout << "1. Account Information" << endl;     
+      cout << "    Username" << endl;               
+      cout << "    Password" << endl;               
+      cout << "    Shipping address" << endl;       
+      cout << "    Payment information" << endl;    
+      cout << "    Delete account" << endl;         
+      cout << "    Go back" << endl;                
+      cout << "2. Cart Information" << endl;        
+      cout << "    Go back" << endl;                // needs attention! 
+      cout << "    View Cart" << endl;              // needs attention!
+      cout << "    Remove Item from Cart" << endl;  // needs attention!
+      cout << "    Add item to cart" << endl;       // needs attention!
+      cout << "    Checkout" << endl;               // needs attention!
+      cout << "3. Order History" << endl;           // needs attention!
+      cout << "    Go back" << endl;                // needs attention!
+      cout << "4. Inventory" << endl;               // needs attention!
+      cout << "    Categories" << endl;             // needs attention!
+      cout << "    Go back" << endl;                // needs attention!
       cout << "5. Exit Program (logout)" << endl;
       cout << "\nWhat would you like to do? ";
       cin >> choice;
@@ -313,18 +318,93 @@ void login()
         cout << "4. Checkout" << endl;
         cout << "5. Go back" << endl;
         cout << "\nWhat would you like to do? ";
+        cin >> choice;
+        cout<< endl;
+        switch (choice)
+        {
+        case 1:
+            cout << "Items in your cart: " << endl;
+            // display all the line with item information
+            break;
+        
+        case 2:
+            cout << "Enter the item number:";
+            // delete the specific item from cart, like deleting the user from users
+            cout << endl;
+            break;
+
+        case 3:
+            cout<<"Enter the item number: ";
+            // should add the item to the cart
+            cout<<endl;
+            break;
+
+        case 4:
+            // display card information
+            // display the total price of the items from the cart
+            cout << "You just checked out, the items will be delivered within 24 hours." << endl;
+            break;
+
+        case 5:
+            again = true;
+            system("cls");
+            break;
+            
+        default:
+            system("cls");
+            cout << "Invalid Choice, try again.\n" << endl;
+            break;
+        }
         break;
       case 3:
         cout << "Order History" << endl;
         cout << "1. View Order History" << endl;
         cout << "2. Go back" << endl;
         cout << "\nWhat would you like to do? ";
+        cin >> choice;
+        cout << endl;
+        switch (choice)
+        {
+        case 1:
+            // check the order history of user and output the information on screen
+            cout << "This is what you have ordered." << endl;
+            break;
+
+        case 2:
+            again = true;
+            system("cls");
+            break;
+
+        default:
+            system("cls");
+            cout << "Invalid Choice, try again.\n" << endl;
+            break;
+        }
         break;
       case 4:
         cout << "Inventory" << endl;
         cout << "1. Categories" << endl;
         cout << "2. Go back" << endl;
         cout << "\nWhat would you like to do? ";
+        cin >> choice;
+        cout << endl;
+        switch (choice)
+        {
+        case 1:
+            cout << "List of products in inventory: " << endl << endl;
+            view_inventory();
+            break;
+        
+        case 2:
+            again = true;
+            system("cls");
+            break;
+
+        default:
+            system("cls");
+            cout<<"Invalid Choice, try again.\n" << endl;
+            break;
+        }
         break;
       case 5:
         cout << "Thanks\n\n";
@@ -390,5 +470,79 @@ void create_account()
   cout << "\nRegistration Sucessful\n";
   main();
 
+
+}
+
+void view_inventory()
+{
+    string line;
+    int totalLines = 0;
+    ifstream myfile("inventory1.txt");
+    if(myfile.is_open())
+    {
+        while(getline(myfile, line))
+        {
+            totalLines++;
+        }
+        myfile.close();
+    }
+    else cout<< "Unable to open file" << endl;
+
+    // array to hold the values
+    string* holdValues = new string[totalLines];
+    int counter = 0;
+
+    ifstream myfile1("inventory1.txt");
+    if(myfile1.is_open())
+    {
+        while(getline(myfile1, line))
+        {
+            holdValues[counter++] = line;
+        }
+        myfile1.close();
+    }
+    cout<<"Product_ID"<<setw(15)<<"Product_Name"<<setw(15)<<"Price"<<setw(25)<<"Stock"<<endl;
+    cout<<"---------------------------------------------------------------------------------"<<endl;
+    string word, id, pn, pp, ps;
+    for(int i = 0; i < totalLines; i++)
+    {
+        istringstream iss(holdValues[i]);
+        int col = 0;
+        while(iss>>word)
+        {
+            switch (col)
+            {
+            case 0:
+                id = word;
+                break;
+            case 1:
+                pn = word;
+                break;
+            case 2:
+                pp = word;
+                break;
+            case 3:
+                ps = word;
+                break;
+            default:
+                break;
+            }
+            col++;
+        }
+        cout<<id<<setw(20)<<pn<<setw(20)<<pp<<setw(20)<<ps<<endl;
+    }
+
+}
+
+void add_to_cart()
+{
+    //infile.open()
+}
+
+void order_history()
+{
+    ifstream infile;
+    string pid;
+    system("cls");
 
 }
