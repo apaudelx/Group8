@@ -384,7 +384,8 @@ void create_account()
   }
 
   ofstream reg("userDB.txt", ios::app);
-  reg << endl << reguser << endl << regpass << endl << "NULL" << endl << "NULL";
+  reg << reguser << "\n" << regpass << "\n" << "NULL" << "\n" << "NULL" << "\n" << "\n";
+  reg.close();
   system("cls");
   cout << "\nRegistration Sucessful\n";
   main();
