@@ -587,10 +587,29 @@ int add_to_cart(string username)
 {
   string finduser;
   string product_id;
-  cout << "Which item would you like to add (ENTER PRODUCT ID)? ";
-  cin >> product_id;
-  ifstream ifs("inventory.txt");
   string line;
+  bool found = false;
+  ifstream ifs("inventory.txt");
+  cout << "Which item would you like to add (ENTER PRODUCT ID)? ";
+  while (!found) {
+    cin >> product_id;
+    ifs.open("inventory.txt");
+    while (getline(ifs, line)) {
+      istringstream item(line);
+      string word;
+      item >> word;
+      if (word == product_id) {
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      cout << endl << "Product ID not found. Please enter a valid ID: ";
+      ifs.close();
+    }
+  }
+  ifs.close();
+  ifs.open("inventory.txt");
   fstream out(username += "cart.txt", std::ios_base::app);
   while (getline(ifs, line))
   {
