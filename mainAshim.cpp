@@ -346,6 +346,7 @@
                         break;
 
                     case 2:
+                        view_cart(usr.getData(1));
                         delete_from_cart(usr.getData(1));
                         cout << endl;
                         cout << "\nEnter 1 to go back:  ";
@@ -454,7 +455,6 @@
                         case 1:
                             // Add item to the present userName, we can either create a new text file and add the orders there
                             add_to_cart(usr.getData(1));
-                            cout<<"Item successfully added to cart";
                             cout<<"\nDo you want to add more items? "<<endl;
                             cout<<"1. Yes"<<endl;
                             cout<<"2. No, go back"<<endl;
@@ -639,38 +639,27 @@
         cout << "Which item would you like to add (ENTER PRODUCT ID)? ";
         cin >> product_id;
         ifstream ifs("inventory.txt");
+        /* if(!(ifs>>product_id))
+        {
+            cout<<"Please enter the correct PRODUCT ID";
+            add_to_cart(username);
+        } */
         string line;
         fstream out(username+="cart.txt", std::ios_base::app);
+        out<<"ItemNum"<<setw(11)<<"ISBN"<<setw(18)<<"Book_Name"<<setw(15)<<"Book_Price"<<endl;
         while (getline(ifs, line))
         {
             size_t pos = line.find(product_id);
             if (pos != string::npos){
-                cout << "Added [" <<line << "] to cart!" << endl;
+                cout << "Added   [" <<line << "]   to cart!" << endl;
                     out << i << " " << line << endl;
                     out.close();
             }
         }
         i++;
+        cout<<"Item successfully added to cart";
         return 0;
     }
-/* 
-    int view_cart(string username)
-    {
-        ifstream f(username+="cart.txt");
-        if (f.is_open())
-        cout << f.rdbuf();
-        f.close();
-        string s;
-        int sum = 0;
-        ifstream openfile(username);
-        while(openfile>>s && openfile>>s && openfile>>s && openfile>>s)
-        {
-            sum = sum + stoi(s);
-        }
-        cout<<"\n"<<"Total : $"<<sum;
-        return 0;
-    }
- */
 
      int view_cart(string username)
     {
@@ -681,7 +670,7 @@
         string s;
         double sum = 0.00;
         ifstream openfile(username);
-        while(openfile>>s && openfile>>s && openfile>>s && openfile>>s)
+        while(openfile>>s && openfile>>s && openfile>>s && openfile>>s && openfile>>s)
         {
             sum = sum + stod(s);
         }
@@ -706,7 +695,7 @@
 
         string filename(username += "cart.txt");
 
-        cout << "Which item would you like to delete (ENTER PRODUCT ID)? ";
+        cout << "\nWhich item would you like to delete (ENTER ITEM NUMBER)? ";
         cin >> product_id;
         ifstream ifs(filename);
         ofstream temp;
