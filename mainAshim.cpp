@@ -21,6 +21,7 @@
     void view_inventory();
     int view_cart(string username); 
     int remove_cart(string username);
+    int delete_from_cart(string username);
 
     using namespace std;
 
@@ -116,10 +117,10 @@
                 cout << "    Delete account" << endl;
                 cout << "    Go back" << endl;
                 cout << "2. Cart Information" << endl;
-                cout << "    Go back" << endl;                // needs attention!
                 cout << "    View Cart" << endl;              // needs attention!
                 cout << "    Remove Item from Cart" << endl;  // needs attention!
                 cout << "    Checkout" << endl;               // needs attention!
+                cout << "    Go back" << endl;                // needs attention!
                 cout << "3. Order History" << endl;           // needs attention!
                 cout << "    Go back" << endl;                // needs attention!
                 cout << "4. Inventory" << endl;               // needs attention!
@@ -317,7 +318,6 @@
                     cout << "Cart Information" << endl;
                     cout << "1. View Cart" << endl;
                     cout << "2. Remove Item from Cart" << endl;
-                    //cout << "3. Add item to cart" << endl;
                     cout << "3. Checkout" << endl;
                     cout << "4. Go back" << endl;
                     cout << "\nWhat would you like to do?  ";
@@ -341,15 +341,27 @@
                         
                         default:
                             system("cls");
-                            cout<<"Invalid choice, relogin.\n"<<endl;
+                            cout<<"Invalid choice, please try again\n"<<endl;
                         }
-                        
                         break;
 
                     case 2:
-                        cout << "Enter the item number:";
-                        // delete the specific item from cart, like deleting the user from users
+                        delete_from_cart(usr.getData(1));
                         cout << endl;
+                        cout << "\nEnter 1 to go back:  ";
+                        cin >> choice;
+                        cout<<endl;
+                        switch (choice)
+                        {
+                        case 1:
+                            again = true;
+                            system("cls");
+                            break;
+                        
+                        default:
+                            system("cls");
+                            cout<<"Invalid choice, please try again\n"<<endl;
+                        }
                         break;
 
                     case 3:
@@ -357,14 +369,20 @@
                         cout<<"You have successfully checked out. ";
                         remove_cart(usr.getData(1));
                         cout << endl;
+                        cout<<"\nEnter 1 to go back:  ";
+                        cin>> choice;
+                        switch(choice)
+                        {
+                            case 1:
+                                again = true;
+                                system("cls");
+                                break;
+                            default:
+                                break;
+                        }
                         break;
 
                     case 4:
-                        // display the total price of the items from the cart
-                        cout << "You just checked out, the items will be delivered within 24 hours." << endl;
-                        break;
-
-                    case 5:
                         again = true;
                         system("cls");
                         break;
@@ -385,9 +403,20 @@
                     switch (choice)
                     {
                     case 1:
-                        // check the order history of user and output the information on screen
                         cout << "This is what you have ordered." << endl;
                         order_history(usr.getData(1));
+                        cout<<"\nEnter 1 to go back:  ";
+                        cin>> choice;
+                        switch(choice)
+                        {
+                            case 1:
+                                again = true;
+                                system("cls");
+                                break;
+                            default:
+                                cout<<"Invalid Choice, try again.\n";
+                                break;
+                        }
                         break;
 
                     case 2:
@@ -435,6 +464,21 @@
                             {
                             case 1:
                                 add_to_cart(usr.getData(1));
+                                cout<<"Item successfully added to cart";
+                                cout<<"\nEnter 1 to go back  "<<endl;
+                                cin>>choice;
+                                switch(choice)
+                                {
+                                    case 1:
+                                        again = true;
+                                        system("cls");
+                                        break;
+                                    
+                                    default:
+                                        again = true;
+                                        system("cls");
+                                        break;
+                                }
                                 break;
 
                             case 2:
@@ -443,6 +487,7 @@
                                 break;
                             
                             default:
+                                cout<<"Invalid Choice, try again.\n";
                                 break;
                             }
                             break;
@@ -554,7 +599,7 @@
             }
             myfile1.close();
         }
-        cout << "Product_ID" << setw(15) << "Product_Name" << setw(15) << "Price" << setw(25) << "Stock" << endl;
+        cout << "Product_ID" << setw(15) << "Product_Name" << setw(15) << "Stock" << setw(25) << "Price" << endl;
         cout << "---------------------------------------------------------------------------------" << endl;
         string word, id, pn, pp, ps;
         for (int i = 0; i < totalLines; i++)
@@ -586,7 +631,7 @@
         }
 
     }
-
+    int i = 10000;
     int add_to_cart(string username)
     {
         string finduser;
@@ -600,15 +645,15 @@
         {
             size_t pos = line.find(product_id);
             if (pos != string::npos){
-                cout << line << endl;
-                    out << line << endl;
+                cout << "Added [" <<line << "] to cart!" << endl;
+                    out << i << " " << line << endl;
                     out.close();
             }
         }
+        i++;
         return 0;
     }
-    
-
+/* 
     int view_cart(string username)
     {
         ifstream f(username+="cart.txt");
@@ -625,13 +670,61 @@
         cout<<"\n"<<"Total : $"<<sum;
         return 0;
     }
+ */
+
+     int view_cart(string username)
+    {
+        ifstream f(username+="cart.txt");
+        if (f.is_open())
+        cout << f.rdbuf();
+        f.close();
+        string s;
+        double sum = 0.00;
+        ifstream openfile(username);
+        while(openfile>>s && openfile>>s && openfile>>s && openfile>>s)
+        {
+            sum = sum + stod(s);
+        }
+        cout<<"\n"<<"Total : $"<<sum;
+        return 0;
+    }
+
 
     int order_history(string username)
     {
         ifstream f(username+"orderhistory.txt");
         if (f.is_open())
-        cout << f.rdbuf();
-        f.close();
+            cout << f.rdbuf();
+        return 0;
+    }
+
+    int delete_from_cart(string username)
+    {
+        string finduser;
+        string product_id;
+        string line;
+
+        string filename(username += "cart.txt");
+
+        cout << "Which item would you like to delete (ENTER PRODUCT ID)? ";
+        cin >> product_id;
+        ifstream ifs(filename);
+        ofstream temp;
+        temp.open("temp.txt");
+
+        while (getline(ifs, line))
+        {
+            if (line.substr(0, product_id.size()) != product_id)
+                temp << line << endl;
+        }
+        cout << "The item has been deleted.";
+        ifs.close();
+        temp.close();
+        
+        remove(filename.c_str());
+        rename("temp.txt" , filename.c_str());
+
+
         return 0;
     }
 
@@ -641,7 +734,7 @@
         const char *cstr = uuname.c_str();
         string line;
         ifstream ini_file(username+"cart.txt");
-        ofstream out_file(username+="orderhistory.txt");
+        ofstream out_file(username+"orderhistory.txt",ios::app);
         if(ini_file && out_file)
         {
             while(getline(ini_file, line))
