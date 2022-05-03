@@ -732,3 +732,13 @@
         int tmp = remove(cstr);
         return 0;
     }
+
+    /* Problems we need to check for
+
+     1. When the user cart is empty, the program should throw that that cart is empty, right now it gets stuck at "Items in your cart: "
+     
+     2. When the user just checks the order history before checking out, we have to throw some error that there was nothing inside the order history and they have to checkout first
+     
+     3. When the user enters wrong product ID, we should be able to throw "error, please enter correct product ID", and ask for userInput again, right now it just does nothing than asking user to add more items.
+
+     */
