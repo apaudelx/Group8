@@ -631,8 +631,6 @@
         }
 
     }
-    int i = 10000;
-    
     
     int add_to_cart(string username)
     {
