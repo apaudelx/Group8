@@ -6,6 +6,7 @@
     Purpose:
     #########################*/
     #include <iostream>
+    #include <stdio.h>
     #include <fstream>
     #include <istream>
     #include <stdlib.h>
@@ -15,10 +16,11 @@
     #include "user.h"
     void login();
     void create_account();
-    void order_history();
+    int order_history(string username);
     int add_to_cart(string username);
     void view_inventory();
     int view_cart(string username); 
+    int remove_cart(string username);
 
     using namespace std;
 
@@ -351,8 +353,9 @@
                         break;
 
                     case 3:
-                        cout << "Enter the item number: ";
-                        add_to_cart(usr.getData(1));
+                        cout << "Thank you for shopping. \n";
+                        cout<<"You have successfully checked out. ";
+                        remove_cart(usr.getData(1));
                         cout << endl;
                         break;
 
@@ -384,6 +387,7 @@
                     case 1:
                         // check the order history of user and output the information on screen
                         cout << "This is what you have ordered." << endl;
+                        order_history(usr.getData(1));
                         break;
 
                     case 2:
@@ -622,9 +626,35 @@
         return 0;
     }
 
-    void order_history()
+    int order_history(string username)
     {
-        ifstream infile;
-        string pid;
-        system("cls");
+        string line;
+        ifstream ini_file(username+"cart.txt");
+        ofstream out_file(username+="orderhistory.txt");
+        if(ini_file && out_file)
+        {
+            while(getline(ini_file, line))
+            {
+                out_file<<line<<"\n";
+            }
+        }
+        else{
+            cout<<"Cannot read file";
+        }
+        ini_file.close();
+        out_file.close();
+
+        ifstream f(username+"orderhistory.txt");
+        if (f.is_open())
+        cout << f.rdbuf();
+        f.close();
+        return 0;
+    }
+
+    int remove_cart(string username)
+    {
+        string uuname = username + "cart.txt";
+        const char *cstr = uuname.c_str();
+        int tmp = remove(cstr);
+        return 0;
     }
