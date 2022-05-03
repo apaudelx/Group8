@@ -631,117 +631,43 @@
         }
 
     }
-    
-    int add_to_cart(string username)
+
+    int view_cart(string username)
+    {
+        ifstream f(username+="cart.txt");
+        if (f.is_open())
+        cout << f.rdbuf();
+        f.close();
+        string s;
+        double sum = 0.00;
+        ifstream openfile(username);
+        while(openfile>>s && openfile>>s && openfile>>s && openfile>>s && openfile>>s)
+        {
+            sum = sum + stod(s);
+        }
+        cout<<"\n"<<"Total : $"<<sum;
+        return 0;
+    }
+    int i = 1100;
+     int add_to_cart(string username)
     {
         string finduser;
         string product_id;
-        string line;
-        bool found = false;
-        ifstream ifs("inventory.txt");
         cout << "Which item would you like to add (ENTER PRODUCT ID)? ";
-        while (!found) {
-            cin >> product_id;
-            ifs.open("inventory.txt");
-            while (getline(ifs, line)) {
-            istringstream item(line);
-            string word;
-            item >> word;
-            if (word == product_id) {
-                found = true;
-                break;
-            }
-            }
-            if (!found) {
-            cout << endl << "Product ID not found. Please enter a valid ID: ";
-            ifs.close();
-            }
-        }
-        ifs.close();
-        ifs.open("inventory.txt");
-        fstream out(username += "cart.txt", std::ios_base::app);
+        cin >> product_id;
+        ifstream ifs("inventory.txt");
+        string line;
+        fstream out(username+="cart.txt", std::ios_base::app);
         while (getline(ifs, line))
         {
             size_t pos = line.find(product_id);
-            if (pos != string::npos) {
-            istringstream item(line);
-            int col = 0;
-            string word;
-            while (item >> word) {
-                switch (col) {
-                case 0:
-                    cout << word << " ";
-                    out << word << " ";
-                    break;
-                case 1:
-                    cout << word << " ";
-                    out << word << " ";
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    cout << word << endl;
-                    out << word << endl;
-                    break;
-                default:
-                    break;
-                }
-                col++;
-            }
-            out.close();
+            if (pos != string::npos){
+                cout << "Added [" <<line << "] to cart!" << endl;
+                    out << i << line << endl;
+                    out.close();
             }
         }
-        ofstream tmp("tmpInv.txt");
-        ifs.close();
-        ifs.open("inventory.txt");
-        bool first = true;
-        int stk = 0;
-        while (getline(ifs, line)) {
-            if (line.substr(0, line.find(" ")) == product_id) {
-            istringstream ln(line);
-            int col = 0;
-            string word;
-            while (ln >> word) {
-                switch (col) {
-                case 0:
-                    if (first) {
-                    first = false;
-                    tmp << word << " ";
-                    }
-                    else {
-                    tmp << endl << word << " ";
-                    }
-                    break;
-                case 1:
-                    tmp << word << " ";
-                    break;
-                case 2:
-                    stk = stoi(word);
-                    stk = stk - 1;
-                    word = to_string(stk);
-                    tmp << word << " ";
-                    break;
-                case 3:
-                    tmp << word << " ";
-                    break;
-                }
-                col++;
-            }
-            }
-            else {
-            if (first) {
-                first = false;
-                tmp << line;
-            }
-            else {
-                tmp << endl << line;
-            }
-            }
-        }
-        ifs.close();
-        tmp.close();
-        remove("inventory.txt");
-        int err = rename("tmpInv.txt", "inventory.txt");
+        i++;
         return 0;
     }
 
@@ -760,7 +686,7 @@
         string product_id;
         string line;
 
-        string filename(username += "cart.txt");
+        string filename(username+"cart.txt");
 
         cout << "\nWhich item would you like to delete (ENTER ITEM NUMBER)? ";
         cin >> product_id;
