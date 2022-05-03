@@ -12,6 +12,7 @@ Purpose:
 #include <sstream>
 #include <string>
 #include <iomanip>
+#include<stdio.h>
 #include "user.h"
 void login();
 void create_account();
@@ -20,6 +21,7 @@ int add_to_cart(string username);
 void view_inventory();
 int view_cart(string username);
 int delete_from_cart(string username);
+int remove_cart(string username);
 
 
 using namespace std;
@@ -357,12 +359,11 @@ void login()
                     break;
 
                 case 3:
-                    cout << "Enter the item number: ";
-                    add_to_cart(usr.getData(1));
+                    cout << "Thank you for shopping. \n";
+                    cout << "You have successfully checked out. ";
+                    remove_cart(usr.getData(1));
                     cout << endl;
-                    again = true;
                     break;
-
                 case 4:
                     again = true;
                     system("cls");
@@ -650,6 +651,29 @@ int view_cart(string username)
         sum = sum + stoi(s);
     }
     cout << "\n" << "Total : $" << sum;
+    return 0;
+}
+
+int remove_cart(string username)
+{
+    string uuname = username + "cart.txt";
+    const char* cstr = uuname.c_str();
+    string line;
+    ifstream ini_file(username + "cart.txt");
+    ofstream out_file(username += "orderhistory.txt");
+    if (ini_file && out_file)
+    {
+        while (getline(ini_file, line))
+        {
+            out_file << line << "\n";
+        }
+    }
+    else {
+        cout << "Cannot read file";
+    }
+    ini_file.close();
+    out_file.close();
+    int tmp = remove(cstr);
     return 0;
 }
 
