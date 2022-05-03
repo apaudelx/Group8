@@ -16,11 +16,12 @@
     #include "user.h"
     void login();
     void create_account();
-    void order_history();
+    int order_history(string username);
     int add_to_cart(string username);
     void view_inventory();
     int view_cart(string username); 
     int remove_cart(string username);
+    int delete_from_cart(string username);
 
     using namespace std;
 
@@ -346,9 +347,14 @@
                         break;
 
                     case 2:
-                        cout << "Enter the item number:";
                         // delete the specific item from cart, like deleting the user from users
+                        delete_from_cart(usr.getData(1));
+                        cout << "\nEnter 1 to go back:  ";
+                        cin >> choice;
                         cout << endl;
+                        again = true;
+                        system("cls");
+             
                         break;
 
                     case 3:
@@ -384,8 +390,15 @@
                     {
                     case 1:
                         // check the order history of user and output the information on screen
-                        cout << "This is what you have ordered." << endl;
-                        break;
+                        cout << "This is what you have ordered: " << endl;
+                        order_history(usr.getData(1));
+                        cout << "Press 1 to go back to MENU: ";
+                        cin>>choice;
+                        if(choice == 1)
+                        {
+                            again=true;
+                        }
+                        
 
                     case 2:
                         again = true;
@@ -588,7 +601,7 @@
 
     }
 
-    int add_to_cart(string username)
+     int add_to_cart(string username)
     {
         string finduser;
         string product_id;
@@ -651,7 +664,49 @@
         outfile.close();
         remove((username + "cart.txt").c_str());
         cout << "Successful Checkout!" << endl; 
-
     }
+
+    int order_history(string username)
+    {
+        ifstream f(username+"orderhistory.txt");
+        if (f.is_open())
+        cout << f.rdbuf();
+        f.close();
+        return 0;
+    }
+
+    int delete_from_cart(string username)
+{
+    string finduser;
+    string product_id;
+    string line;
+
+    string filename(username += "cart.txt");
+    cout << "Cart: " << endl;
+    ifstream f(filename);
+    if (f.is_open())
+    cout << f.rdbuf();  
+    f.close();
+
+    cout << "Which item would you like to delete (ENTER PRODUCT ID)? ";
+    cin >> product_id;
+    ifstream ifs(filename);
+    ofstream temp;
+    temp.open("temp.txt");
+    cout<< endl; 
+
+    while (getline(ifs, line))
+    {
+        if (line.substr(0, product_id.size()) != product_id)
+            temp << line << endl;
+    }
+    cout << "The item has been deleted.";
+    ifs.close();
+    temp.close();
+    
+    remove(filename.c_str());
+    rename("temp.txt" , filename.c_str());
+    return 0;
+}
 
     
