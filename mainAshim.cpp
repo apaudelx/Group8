@@ -628,6 +628,17 @@
 
     int order_history(string username)
     {
+        ifstream f(username+"orderhistory.txt");
+        if (f.is_open())
+        cout << f.rdbuf();
+        f.close();
+        return 0;
+    }
+
+    int remove_cart(string username)
+    {
+        string uuname = username + "cart.txt";
+        const char *cstr = uuname.c_str();
         string line;
         ifstream ini_file(username+"cart.txt");
         ofstream out_file(username+="orderhistory.txt");
@@ -643,18 +654,6 @@
         }
         ini_file.close();
         out_file.close();
-
-        ifstream f(username+"orderhistory.txt");
-        if (f.is_open())
-        cout << f.rdbuf();
-        f.close();
-        return 0;
-    }
-
-    int remove_cart(string username)
-    {
-        string uuname = username + "cart.txt";
-        const char *cstr = uuname.c_str();
         int tmp = remove(cstr);
         return 0;
     }
