@@ -3,7 +3,6 @@
             Ashtanyrein Duncan (add485)
             Benny Jiang (bj962)
             Ashim Paudel (ap2737)
-    Purpose:
     #########################*/
     #include <iostream>
     #include <stdio.h>
@@ -117,16 +116,16 @@
                 cout << "    Delete account" << endl;
                 cout << "    Go back" << endl;
                 cout << "2. Cart Information" << endl;
-                cout << "    View Cart" << endl;              // needs attention!
-                cout << "    Remove Item from Cart" << endl;  // needs attention!
-                cout << "    Checkout" << endl;               // needs attention!
-                cout << "    Go back" << endl;                // needs attention!
-                cout << "3. Order History" << endl;           // needs attention!
-                cout << "    Go back" << endl;                // needs attention!
-                cout << "4. Inventory" << endl;               // needs attention!
-                cout << "    Categories" << endl;             // needs attention!
+                cout << "    View Cart" << endl;              
+                cout << "    Remove Item from Cart" << endl;  
+                cout << "    Checkout" << endl;               
+                cout << "    Go back" << endl;                
+                cout << "3. Order History" << endl;           
+                cout << "    Go back" << endl;                
+                cout << "4. Inventory" << endl;               
+                cout << "    Categories" << endl;             
                 cout << "    Add item to cart" << endl;
-                cout << "    Go back" << endl;                // needs attention!
+                cout << "    Go back" << endl;                
                 cout << "5. Exit Program (logout)" << endl;
                 cout << "\nWhat would you like to do?  ";
                 cin >> choice;
@@ -326,7 +325,6 @@
                     switch (choice)
                     {
                     case 1:
-                        cout << "Items in your cart: " << endl;
                         view_cart(usr.getData(1));
                         cout<<endl;
                         cout << "\nEnter 1 to go back:  ";
@@ -453,7 +451,6 @@
                         switch (choice)
                         {
                         case 1:
-                            // Add item to the present userName, we can either create a new text file and add the orders there
                             add_to_cart(usr.getData(1));
                             cout<<"\nDo you want to add more items? "<<endl;
                             cout<<"1. Yes"<<endl;
@@ -493,7 +490,6 @@
                             break;
 
                         default:
-                            //system("cls");
                             break;
                         }
 
@@ -635,42 +631,145 @@
     int view_cart(string username)
     {
         ifstream f(username+="cart.txt");
-        if (f.is_open())
-        cout << f.rdbuf();
+        f.seekg(0,ios::end);
+            if(f.tellg()<1){
+            cout<<"Your cart is empty! Please add items and come back\n";
+            }else{
+            f.clear();
+            f.seekg(0,ios::beg);
+            cout<<f.rdbuf();
+        }
         f.close();
         string s;
         double sum = 0.00;
         ifstream openfile(username);
-        while(openfile>>s && openfile>>s && openfile>>s && openfile>>s && openfile>>s)
+        while(openfile>>s && openfile>>s && openfile>>s && openfile>>s)
         {
             sum = sum + stod(s);
         }
         cout<<"\n"<<"Total : $"<<sum;
         return 0;
     }
-    int i = 1100;
-     int add_to_cart(string username)
+
+    int add_to_cart(string username)
     {
-        string finduser;
+        int i = 1000;
         string product_id;
-        cout << "Which item would you like to add (ENTER PRODUCT ID)? ";
-        cin >> product_id;
-        ifstream ifs("inventory.txt");
         string line;
-        fstream out(username+="cart.txt", std::ios_base::app);
+        bool found = false;
+        ifstream ifs;
+        cout << "Which item would you like to add (ENTER PRODUCT ID)? ";
+        while (!found) {
+            cin >> product_id;
+            ifs.open("inventory.txt");
+            while (getline(ifs, line)) {
+            istringstream item(line);
+            string word;
+            item >> word;
+            if (word == product_id) {
+                found = true;
+                break;
+            }
+            }
+            if (!found) {
+            cout << endl << "Product ID not found. Please enter a valid ID: ";
+            ifs.close();
+            }
+        }
+        ifs.close();
+        string uc = username += "cart.txt";
+        fstream in(uc.c_str());
+        int num = 0;
+        while (getline(in, line)) {
+            num++;
+        }
+        in.close();
+        ifs.open("inventory.txt");
+        fstream out(uc.c_str(), std::ios_base::app);
         while (getline(ifs, line))
         {
             size_t pos = line.find(product_id);
-            if (pos != string::npos){
-                cout << "Added [" <<line << "] to cart!" << endl;
-                    out << i << line << endl;
-                    out.close();
+            if (pos != string::npos) {
+            istringstream item(line);
+            int col = 0;
+            string word;
+            while (item >> word) {
+                switch (col) {
+                case 0:
+                    cout << word << " ";
+                    out << i+num << " " << word << " ";
+                    break;
+                case 1:
+                    cout << word << " ";
+                    out << word << " ";
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    cout << word << endl;
+                    out << word << endl;
+                    break;
+                default:
+                    break;
+                }
+                col++;
+            }
+            out.close();
             }
         }
-        i++;
+        ofstream tmp("tmpInv.txt");
+        ifs.close();
+        ifs.open("inventory.txt");
+        bool first = true;
+        int stk = 0;
+        while (getline(ifs, line)) {
+            if (line.substr(0, line.find(" ")) == product_id) {
+            istringstream ln(line);
+            int col = 0;
+            string word;
+            while (ln >> word) {
+                switch (col) {
+                case 0:
+                    if (first) {
+                    first = false;
+                    tmp << word << " ";
+                    }
+                    else {
+                    tmp << endl << word << " ";
+                    }
+                    break;
+                case 1:
+                    tmp << word << " ";
+                    break;
+                case 2:
+                    stk = stoi(word);
+                    stk = stk - 1;
+                    word = to_string(stk);
+                    tmp << word << " ";
+                    break;
+                case 3:
+                    tmp << word << " ";
+                    break;
+                }
+                col++;
+            }
+            }
+            else {
+            if (first) {
+                first = false;
+                tmp << line;
+            }
+            else {
+                tmp << endl << line;
+            }
+            }
+        }
+        ifs.close();
+        tmp.close();
+        remove("inventory.txt");
+        int err = rename("tmpInv.txt", "inventory.txt");
         return 0;
     }
-
 
     int order_history(string username)
     {
@@ -682,7 +781,6 @@
 
     int delete_from_cart(string username)
     {
-        string finduser;
         string product_id;
         string line;
 
@@ -732,13 +830,3 @@
         int tmp = remove(cstr);
         return 0;
     }
-
-    /* Problems we need to check for
-
-     1. When the user cart is empty, the program should throw that that cart is empty, right now it gets stuck at "Items in your cart: "
-     
-     2. When the user just checks the order history before checking out, we have to throw some error that there was nothing inside the order history and they have to checkout first
-     
-     3. When the user enters wrong product ID, we should be able to throw "error, please enter correct product ID", and ask for userInput again, right now it just does nothing than asking user to add more items.
-
-     */
