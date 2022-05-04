@@ -120,7 +120,8 @@
                 cout << "    Remove Item from Cart" << endl;  
                 cout << "    Checkout" << endl;               
                 cout << "    Go back" << endl;                
-                cout << "3. Order History" << endl;           
+                cout << "3. Order History" << endl;
+                cout << "    View Order History" << endl;
                 cout << "    Go back" << endl;                
                 cout << "4. Inventory" << endl;               
                 cout << "    Categories" << endl;             
