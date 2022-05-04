@@ -610,8 +610,15 @@ int add_to_cart(string username)
     }
   }
   ifs.close();
+  string uc = username += "cart.txt";
+  fstream in(uc.c_str());
+  int num = 0;
+  while (getline(in, line)) {
+    num++;
+  }
+  in.close();
   ifs.open("inventory.txt");
-  fstream out(username += "cart.txt", std::ios_base::app);
+  fstream out(uc.c_str(), std::ios_base::app);
   while (getline(ifs, line))
   {
     size_t pos = line.find(product_id);
@@ -623,7 +630,7 @@ int add_to_cart(string username)
         switch (col) {
           case 0:
             cout << word << " ";
-            out << word << " ";
+            out << i+num << " " << word << " ";
             break;
           case 1:
             cout << word << " ";
