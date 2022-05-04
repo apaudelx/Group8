@@ -13,7 +13,7 @@ Once logged in, your user needs to be able to interact with all the items, shop,
 3. Run these commands:
 ~~~
 $ g++ -o <name-you-want-to-give> main.cpp
-$ .\<name-you-game>.exe
+$ .\<name-you-gave>.exe
 ~~~
 4. Select 1 to LOGIN
 5. Use "user" as USERNAME and "password" as PASSWORD to login for the first time or you can create your own account and use that to login
