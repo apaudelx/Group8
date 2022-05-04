@@ -1,11 +1,10 @@
 # Methods_And_Tools_Project
 
 # Project
-~~~
+
 To create a command-line e-commerce store. 
 User must be able to login or create an account once the system begins. They cannot proceed without logging in so make sure wrong choice are accounted for and there's a choice for them to quit if they do not want to login. Only one user type need to be accounted.
 Once logged in, your user needs to be able to interact with all the items, shop, and manage their account.
-~~~
 
 ## Setup to run the program
 1. Clone or download the repositiory
@@ -21,7 +20,7 @@ $ .\<name-you-gave>.exe
 
 ## Team
 Group Number: 8 
-- Ashim Paudel
-- Grant Doty
-- Ashtanyrein Duncan
-- Benny Jiang
+- Ashim Paudel (ap2737)
+- Grant Doty (td1131)
+- Ashtanyrein Duncan (add485)
+- Benny Jiang (bj962)
