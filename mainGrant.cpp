@@ -585,11 +585,12 @@ void view_inventory()
 
 int add_to_cart(string username)
 {
+  int i = 1000;
   string finduser;
   string product_id;
   string line;
   bool found = false;
-  ifstream ifs("inventory.txt");
+  ifstream ifs;
   cout << "Which item would you like to add (ENTER PRODUCT ID)? ";
   while (!found) {
     cin >> product_id;
